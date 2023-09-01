@@ -1,5 +1,3 @@
-import family from "../family";
-
 let familyR;
 export function findFamilyForName(name, family) {
   if (name === "Shan" || name === "Aga") {
@@ -104,7 +102,7 @@ export function findDaughters(name, family) {
     // console.log("a daughter are : ", name, daughter);
     return daughter;
   } else {
-    console.log("a no children");
+    // console.log("a no children");
     return [];
   }
 }

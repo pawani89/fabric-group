@@ -1,5 +1,3 @@
-import logo from "./logo.svg";
-import "./App.css";
 import familyObject from "./family";
 import { findFamilyForName, addFamilyForName } from "./utils/relationchk.js";
 import { findRelation } from "./components/problem1/problem1Handler";
@@ -37,12 +35,12 @@ function App() {
     );
     // console.log("akaka: ", newS);
     let x = addFamilyForName(family, parentName, newS);
-    // console.log("x ak:", x);
+    console.log("x ak:", x);
     setFamily({ ...x });
   };
   const findgirl = () => {
-    console.log("akaajs: ", family);
-    let x = findGirlChild(family);
+    // console.log("akaajs: ", family);
+    let x = findGirlChild(family, []);
     console.log("akaka:", x);
   };
   return (

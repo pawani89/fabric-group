@@ -1,17 +1,32 @@
 import { findDaughters } from "../../utils/relationchk";
-let a = {};
-export function findGirlChild(family) {
-  family.children.forEach((d) => {
+
+export function findGirlChild(family, a) {
+  family.children.forEach((d, ind) => {
     if (d.children.length !== 0) {
-      let n = findDaughters(family.mother, family).length;
-      if (n !== 0) {
-        a = {
-          ...a,
-          [d.mother]: n,
-        };
+      let noOfDaughters = findDaughters(family.mother, family).length;
+      if (noOfDaughters > 0) {
+        a.push(family.mother + ":" + noOfDaughters);
       }
     }
-    findGirlChild(d);
+    findGirlChild(d, a);
   });
-  return a;
+  let uniqueList = a.filter((a, i, ar) => i === ar.indexOf(a));
+  let maxNoOfDaughters = maxDaughters(uniqueList);
+  return maxNoOfDaughters;
+}
+function maxDaughters(uniqueList) {
+  let max = uniqueList.reduce(function (p, v) {
+    let pI = getValueAfterColon(p);
+    let vI = getValueAfterColon(v);
+    return pI > vI ? p : v;
+  }, "");
+  // console.log("akansha max:", max);
+  let x = getValueAfterColon(max);
+  let allMAx = uniqueList.filter((d) => getValueAfterColon(d) === x);
+  return allMAx;
+}
+
+function getValueAfterColon(val) {
+  let v = parseInt(val.split(":").pop());
+  return v;
 }
