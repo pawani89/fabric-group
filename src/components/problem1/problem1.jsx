@@ -30,6 +30,10 @@ function Problem1({ name, setName, setRelation, relation, findFamily }) {
         <option value="daughters">daughters</option>
         <option value="sisterinlaw">sisterinlaw</option>
         <option value="brotherinlaw">brotherinlaw</option>
+        <option value="paternaluncles">paternaluncles</option>
+        <option value="maternaluncles">maternaluncles</option>
+        <option value="paternalaunts">paternalaunts</option>
+        <option value="maternalaunts">maternalaunts</option>
       </select>
       <button onClick={findFamily}>Find Family</button>
     </>

@@ -9,9 +9,13 @@ import {
   findMother,
   findSons,
   findGrandDaughters,
+  findPaternalUncle,
+  findMaternalUncle,
+  findMaternalSister,
+  findPaternalSister,
 } from "../../utils/relationchk";
 
-export function findRelation(name, family, relation) {
+export function findRelative(name, family, relation) {
   let result;
   switch (relation) {
     case "brother":
@@ -26,9 +30,10 @@ export function findRelation(name, family, relation) {
     case "father":
       result = findFather(name, family);
       break;
-    case "children":
-      result = findChildren(name, family);
-      break;
+    // case "children":
+    //   console.log("akansha jkkkkkkkk");
+    //   result = findChildren(name, family);
+    //   break;
     case "sons":
       result = findSons(name, family);
       break;
@@ -43,6 +48,18 @@ export function findRelation(name, family, relation) {
       break;
     case "brotherinlaw":
       result = findBrotherInLaw(name, family);
+      break;
+    case "paternaluncles":
+      result = findPaternalUncle(family);
+      break;
+    case "maternaluncles":
+      result = findMaternalUncle(family);
+      break;
+    case "maternalaunts":
+      result = findMaternalSister(family);
+      break;
+    case "paternalaunts":
+      result = findPaternalSister(family);
       break;
     default:
       break;

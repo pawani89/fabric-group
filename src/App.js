@@ -1,12 +1,14 @@
 import familyObject from "./family";
 import { findFamilyForName, addFamilyForName } from "./utils/relationchk.js";
-import { findRelation } from "./components/problem1/problem1Handler";
+import { findRelation } from "./components/problem4/problem";
+import { findRelative } from "./components/problem1/problem1Handler";
 import { addchild } from "./components/problem2/problem2Handler";
 import { findGirlChild } from "./components/problem3/problem3Handler";
 import { useState } from "react";
 import Problem1 from "./components/problem1/problem1";
 import Problem2 from "./components/problem2/problem2";
 import Problem3 from "./components/problem3/problem3";
+import Problem4 from "./components/problem4/problem4";
 
 function App() {
   const [family, setFamily] = useState({ ...familyObject });
@@ -15,11 +17,12 @@ function App() {
   const [childRelation, setChilRelation] = useState("select");
   const [childName, setChildName] = useState("");
   const [parentName, setParentName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [secondName, setSecondName] = useState("");
 
   const findFamily = () => {
-    let familyFound = findFamilyForName(name, family, {});
-    // console.log("akakaka familyFound", familyFound);
-    const x = findRelation(name, familyFound, relation);
+    let familyFound = findFamilyForName(name, family);
+    const x = findRelative(name, familyFound, relation);
     console.log("akansha family: ", x);
   };
 
@@ -43,6 +46,14 @@ function App() {
     let x = findGirlChild(family, []);
     console.log("akaka:", x);
   };
+
+  const findrelation = () => {
+    let familyFound = findFamilyForName(firstName, family);
+    console.log("akansha fn sn: ", firstName, secondName);
+    let relation = findRelation(firstName, secondName, familyFound);
+    console.log("akansha relation: ", relation);
+  };
+
   return (
     <div className="App">
       <Problem1
@@ -64,6 +75,14 @@ function App() {
       />
       <br />
       <Problem3 findgirl={findgirl}></Problem3>
+      <br />
+      <Problem4
+        setFirstName={setFirstName}
+        firstName={firstName}
+        setSecondName={setSecondName}
+        secondName={secondName}
+        findrelation={findrelation}
+      />
     </div>
   );
 }
