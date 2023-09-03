@@ -139,32 +139,63 @@ export function findMother(name, family) {
   }
 }
 
-// export function findChildren(name, family) {
-//   if (family.mother === name || family.father === name) {
-//     if (family.children.length > 0) {
-//       // console.log("achildren:", family.children);
-//       return family.children;
-//     } else {
-//       // console.log("a no children");
-//       return [];
-//     }
-//   } else {
-//     let respectiveFamily = family.children.filter(
-//       (d) => d.father === name || d.mother === name
-//     );
-//     console.log(
-//       "akansha family!!!!: ",
-//       respectiveFamily,
-//       family.children,
-//       name
-//     );
-//     if (respectiveFamily[0].children.length !== 0) {
-//       return respectiveFamily.children;
-//     } else {
-//       return [];
-//     }
-//   }
-// }
+export function findChildren(name, family) {
+  // if (family.mother === name || family.father === name) {
+  //   if (family.children.length > 0) {
+  //     // console.log("achildren:", family.children);
+  //     return family.children;
+  //   } else {
+  //     // console.log("a no children");
+  //     return [];
+  //   }
+  // } else {
+  //   let respectiveFamily = family.children.filter(
+  //     (d) => d.father === name || d.mother === name
+  //   );
+  //   console.log(
+  //     "akansha family!!!!: ",
+  //     respectiveFamily,
+  //     family.children,
+  //     name
+  //   );
+  //   if (respectiveFamily[0].children.length !== 0) {
+  //     return respectiveFamily.children;
+  //   } else {
+  //     return [];
+  //   }
+
+  // }
+  let list = [];
+  if (name === familyObject.father || name === familyObject.mother) {
+    if (family.children.length !== 0) {
+      list = family.children.map((d) => {
+        if (d.relation === "son") {
+          return d.father;
+        } else {
+          return d.mother;
+        }
+      });
+      return list;
+    } else {
+      return [];
+    }
+  } else {
+    let fam = findSubFamily(name, family)[0];
+    // console.log(fam, name, family);
+    if (fam.children.length !== 0) {
+      list = fam.children.map((d) => {
+        if (d.relation === "son") {
+          return d.father;
+        } else {
+          return d.mother;
+        }
+      });
+      return list;
+    } else {
+      return [];
+    }
+  }
+}
 export function findSons(name, family) {
   if (name === familyObject.mother || name === familyObject.father) {
     if (family.children.length > 0) {

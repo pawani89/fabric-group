@@ -36,10 +36,10 @@ export function findRelative(name, family, relation) {
     case "father":
       result = findFather(name, family);
       break;
-    // case "children":
-    //   console.log("akansha jkkkkkkkk");
-    //   result = findChildren(name, family);
-    //   break;
+    case "children":
+      // console.log("akansha jkkkkkkkk");
+      result = convertTostring(findChildren(name, family));
+      break;
     case "sons":
       result = convertTostring(findSons(name, family));
       // result = result.join(",");
