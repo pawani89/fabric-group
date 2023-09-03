@@ -14,15 +14,21 @@ import {
   findMaternalSister,
   findPaternalSister,
 } from "../../utils/relationchk";
-
+function convertTostring(result) {
+  let noEmpty = result.filter((d) => d !== "");
+  return noEmpty.join(",");
+}
 export function findRelative(name, family, relation) {
   let result;
   switch (relation) {
     case "brother":
-      result = findBrother(name, family);
+      result = convertTostring(findBrother(name, family).map((d) => d.father));
+      // console.log("akaaaj ", result);
+      // result = result.join(",");
       break;
     case "sister":
-      result = findSister(name, family);
+      result = convertTostring(findSister(name, family).map((d) => d.mother));
+      // result = result.join(",");
       break;
     case "mother":
       result = findMother(name, family);
@@ -35,31 +41,32 @@ export function findRelative(name, family, relation) {
     //   result = findChildren(name, family);
     //   break;
     case "sons":
-      result = findSons(name, family);
+      result = convertTostring(findSons(name, family));
+      // result = result.join(",");
       break;
     case "daughters":
-      result = findDaughters(name, family);
+      result = convertTostring(findDaughters(name, family));
       break;
     case "granddaughters":
       result = findGrandDaughters(name, family);
       break;
     case "sisterinlaw":
-      result = findSisterInLaw(name, family);
+      result = convertTostring(findSisterInLaw(name, family));
       break;
     case "brotherinlaw":
-      result = findBrotherInLaw(name, family);
+      result = convertTostring(findBrotherInLaw(name, family));
       break;
     case "paternaluncles":
-      result = findPaternalUncle(family);
+      result = convertTostring(findPaternalUncle(family));
       break;
     case "maternaluncles":
-      result = findMaternalUncle(family);
+      result = convertTostring(findMaternalUncle(family));
       break;
     case "maternalaunts":
-      result = findMaternalSister(family);
+      result = convertTostring(findMaternalSister(family));
       break;
     case "paternalaunts":
-      result = findPaternalSister(family);
+      result = convertTostring(findPaternalSister(family));
       break;
     default:
       break;

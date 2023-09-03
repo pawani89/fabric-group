@@ -19,11 +19,17 @@ function App() {
   const [parentName, setParentName] = useState("");
   const [firstName, setFirstName] = useState("");
   const [secondName, setSecondName] = useState("");
-
+  const [relationResult, setRelationResult] = useState("");
+  const [max, setMax] = useState("");
+  const [rel, setRel] = useState("");
   const findFamily = () => {
     let familyFound = findFamilyForName(name, family);
+    // console.log("akaakkaka: ", familyFound, name);
     const x = findRelative(name, familyFound, relation);
-    console.log("akansha family: ", x);
+    // console.log("akansha family: ", x);
+    const result =
+      x === "undefined" || x?.length === 0 ? "no such relation found" : x;
+    setRelationResult(result);
   };
 
   const addchild1 = () => {
@@ -38,30 +44,34 @@ function App() {
     );
     // console.log("akaka: ", newS);
     let x = addFamilyForName(family, parentName, newS);
-    console.log("x ak:", x);
+    // console.log("x ak:", x);
     setFamily({ ...x });
   };
   const findgirl = () => {
     // console.log("akaajs: ", family);
     let x = findGirlChild(family, []);
-    console.log("akaka:", x);
+    // console.log("akaka:", x);
+    setMax(x);
   };
 
   const findrelation = () => {
     let familyFound = findFamilyForName(firstName, family);
-    console.log("akansha fn sn: ", firstName, secondName);
+    // console.log("akansha fn sn: ", firstName, secondName);
     let relation = findRelation(firstName, secondName, familyFound);
-    console.log("akansha relation: ", relation);
+    // console.log("akansha relation: ", relation);
+    setRel(relation);
   };
 
   return (
     <div className="App">
+      <div>All Problems:</div>
       <Problem1
         name={name}
         setName={setName}
         setRelation={setRelation}
         relation={relation}
         findFamily={findFamily}
+        result={relationResult}
       />
       <br />
       <Problem2
@@ -74,7 +84,7 @@ function App() {
         addchild1={addchild1}
       />
       <br />
-      <Problem3 findgirl={findgirl}></Problem3>
+      <Problem3 findgirl={findgirl} max={max}></Problem3>
       <br />
       <Problem4
         setFirstName={setFirstName}
@@ -82,6 +92,7 @@ function App() {
         setSecondName={setSecondName}
         secondName={secondName}
         findrelation={findrelation}
+        rel={rel}
       />
     </div>
   );

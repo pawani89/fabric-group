@@ -1,15 +1,17 @@
 import { findDaughters } from "../../utils/relationchk";
 
-export function findGirlChild(family, a) {
-  family.children.forEach((d, ind) => {
-    if (d.children.length !== 0) {
-      let noOfDaughters = findDaughters(family.mother, family).length;
-      if (noOfDaughters > 0) {
-        a.push(family.mother + ":" + noOfDaughters);
-      }
+export function findGirlChild(family) {
+  let a = [];
+  function traverse(family) {
+    let noOfDaughters = findDaughters(family.mother, family).length;
+    if (noOfDaughters > 0) {
+      a.push(family.mother + ":" + noOfDaughters);
     }
-    findGirlChild(d, a);
-  });
+    family.children.forEach((d) => {
+      traverse(d);
+    });
+  }
+  traverse(family);
   let uniqueList = a.filter((a, i, ar) => i === ar.indexOf(a));
   let maxNoOfDaughters = maxDaughters(uniqueList);
   return maxNoOfDaughters;

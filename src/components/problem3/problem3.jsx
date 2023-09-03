@@ -1,7 +1,11 @@
-export default function Problem3({ findgirl }) {
+export default function Problem3({ findgirl, max }) {
   return (
     <>
-      <button onClick={findgirl}>Find Girls</button>
+      <div>Problem 3</div>
+      <button onClick={findgirl} data-testid="checkMax">
+        Find Girls
+      </button>
+      <div data-testid="max">Result:{max}</div>
     </>
   );
 }

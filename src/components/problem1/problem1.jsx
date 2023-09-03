@@ -1,4 +1,11 @@
-function Problem1({ name, setName, setRelation, relation, findFamily }) {
+function Problem1({
+  name,
+  setName,
+  setRelation,
+  relation,
+  findFamily,
+  result,
+}) {
   const handleChange = (e) => {
     setName(e.target.value);
   };
@@ -7,16 +14,19 @@ function Problem1({ name, setName, setRelation, relation, findFamily }) {
   };
   return (
     <>
+      <div>Problem 1</div>
       <input
         type="text"
         placeholder="name"
         value={name}
+        data-testid="name"
         onChange={(e) => handleChange(e)}
       ></input>
-      <label for="relations">Relation:</label>
+      <label>Relation:</label>
       <select
         name="relations"
         id="relations"
+        data-testid="relations"
         onChange={(e) => handleSelectChange(e)}
         value={relation}
       >
@@ -35,7 +45,11 @@ function Problem1({ name, setName, setRelation, relation, findFamily }) {
         <option value="paternalaunts">paternalaunts</option>
         <option value="maternalaunts">maternalaunts</option>
       </select>
-      <button onClick={findFamily}>Find Family</button>
+      <button onClick={findFamily} data-testid="findfamily">
+        Find Family
+      </button>
+      <br />
+      <div data-testid="result-family">Result: {result}</div>
     </>
   );
 }

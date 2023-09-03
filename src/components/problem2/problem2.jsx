@@ -19,7 +19,9 @@ export default function Problem2({
   };
   return (
     <>
+      <div>Problem 2</div>
       <input
+        data-testid="parentname"
         type="text"
         placeholder="name"
         value={parentName}
@@ -29,18 +31,22 @@ export default function Problem2({
         type="text"
         placeholder="child name"
         value={childName}
+        data-testid="childname"
         onChange={(e) => handleChangeC(e)}
       ></input>
       <select
         name="relations"
         id="relations"
+        data-testid="relationtoadd"
         onChange={(e) => handleRelationSelectChange(e)}
         value={childRelation}
       >
         <option value="son">son</option>
         <option value="daughter">daughter</option>
       </select>
-      <button onClick={addchild1}>Add Child</button>
+      <button onClick={addchild1} data-testid="addchild">
+        Add Child
+      </button>
     </>
   );
 }
