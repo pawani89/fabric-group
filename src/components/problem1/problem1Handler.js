@@ -13,6 +13,7 @@ import {
   findMaternalUncle,
   findMaternalSister,
   findPaternalSister,
+  findCousins,
 } from "../../utils/relationchk";
 function convertTostring(result) {
   let noEmpty = result.filter((d) => d !== "");
@@ -68,6 +69,10 @@ export function findRelative(name, family, relation) {
     case "paternalaunts":
       result = convertTostring(findPaternalSister(family));
       break;
+    case "cousins":
+      result = convertTostring(findCousins(name, family));
+      break;
+
     default:
       break;
   }

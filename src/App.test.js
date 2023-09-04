@@ -259,18 +259,18 @@ describe("Problem 1 : find relation", () => {
     let button = screen.getByTestId("findfamily");
     fireEvent.click(button);
 
-    // sister having a brother
+    // input name is of daughter
     fireEvent.change(nameInputField, {
-      target: { value: "Kpila" },
+      target: { value: "Satya" },
     });
     fireEvent.change(selectInputField, {
       target: { value: "sisterinlaw" },
     });
     fireEvent.click(button);
-    const resultField1 = screen.getByText(/Result: Jinki/i);
+    const resultField1 = screen.getByText(/Result: Ambi,Lika/i);
     expect(resultField1).toBeInTheDocument();
 
-    // when brother having a brother
+    // input name is of son
     fireEvent.change(nameInputField, {
       target: { value: "Vich" },
     });
@@ -291,6 +291,53 @@ describe("Problem 1 : find relation", () => {
     fireEvent.click(button);
     const resultField3 = screen.getByText(/Result: Satya/i);
     expect(resultField3).toBeInTheDocument();
+
+    // when input name is sons wife
+    fireEvent.change(nameInputField, {
+      target: { value: "krpi" },
+    });
+    fireEvent.change(selectInputField, {
+      target: { value: "sisterinlaw" },
+    });
+    fireEvent.click(button);
+    const resultField4 = screen.getByText(/Result: asva,mina/i);
+    expect(resultField4).toBeInTheDocument();
+
+    //when input name is of daughters husband
+    fireEvent.change(nameInputField, {
+      target: { value: "satvy" },
+    });
+    fireEvent.change(selectInputField, {
+      target: { value: "sisterinlaw" },
+    });
+    fireEvent.click(button);
+    const resultField5 = screen.getByText(/Result: krpi,mina/i);
+    expect(resultField5).toBeInTheDocument();
+
+    //add a sister and then check for when input name is of daughters husband
+    let parentname = screen.getByTestId("parentname");
+    let childname = screen.getByTestId("childname");
+    let relationtoadd = screen.getByTestId("relationtoadd");
+    let button2 = screen.getByTestId("addchild");
+    fireEvent.change(parentname, {
+      target: { value: "Satya" },
+    });
+    fireEvent.change(childname, {
+      target: { value: "akansha" },
+    });
+    fireEvent.change(relationtoadd, {
+      target: { value: "daughter" },
+    });
+    fireEvent.click(button2);
+    fireEvent.change(nameInputField, {
+      target: { value: "satvy" },
+    });
+    fireEvent.change(selectInputField, {
+      target: { value: "sisterinlaw" },
+    });
+    fireEvent.click(button);
+    const resultField6 = screen.getByText(/Result: akansha,krpi,mina/i);
+    expect(resultField6).toBeInTheDocument();
   });
   it("sisterinlaw/s when not found", () => {
     render(<App />);
@@ -337,6 +384,29 @@ describe("Problem 1 : find relation", () => {
     let selectInputField = screen.getByTestId("relations");
     let button = screen.getByTestId("findfamily");
 
+    // when inout name is daughter
+    fireEvent.change(nameInputField, {
+      target: { value: "Satya" },
+    });
+    fireEvent.change(selectInputField, {
+      target: { value: "brotherinlaw" },
+    });
+    fireEvent.click(button);
+    const resultField3 = screen.getByText(/Result: no such relation found/i);
+    expect(resultField3).toBeInTheDocument();
+
+    // when input name is son
+    fireEvent.change(nameInputField, {
+      target: { value: "Vich" },
+    });
+    fireEvent.change(selectInputField, {
+      target: { value: "brotherinlaw" },
+    });
+    fireEvent.click(button);
+    const resultField4 = screen.getByText(/Result: Vyan/i);
+    expect(resultField4).toBeInTheDocument();
+
+    //input name is wife of son
     fireEvent.change(nameInputField, {
       target: { value: "Lika" },
     });
@@ -344,18 +414,19 @@ describe("Problem 1 : find relation", () => {
       target: { value: "brotherinlaw" },
     });
     fireEvent.click(button);
-    const resultField3 = screen.getByText(/Result: Ish,Chit/i);
-    expect(resultField3).toBeInTheDocument();
+    const resultField5 = screen.getByText(/Result: Ish,Chit,Vyan/i);
+    expect(resultField5).toBeInTheDocument();
 
+    //input name is husband of daughter
     fireEvent.change(nameInputField, {
-      target: { value: "Minu" },
+      target: { value: "Vyan" },
     });
     fireEvent.change(selectInputField, {
       target: { value: "brotherinlaw" },
     });
     fireEvent.click(button);
-    const resultField4 = screen.getByText(/Result: jata/i);
-    expect(resultField4).toBeInTheDocument();
+    const resultField6 = screen.getByText(/Result: Ish,Chit,Vich/i);
+    expect(resultField6).toBeInTheDocument();
   });
   it("brotherinlaw/s when not found", () => {
     render(<App />);
@@ -410,13 +481,13 @@ describe("Problem 1 : find relation", () => {
     expect(resultField4).toBeInTheDocument();
 
     fireEvent.change(nameInputField, {
-      target: { value: "Drita" },
+      target: { value: "asva" },
     });
     fireEvent.change(selectInputField, {
       target: { value: "paternaluncles" },
     });
     fireEvent.click(button);
-    const resultField5 = screen.getByText(/Result: Ish,Vich/i);
+    const resultField5 = screen.getByText(/Result: Ish,Chit,Vich/i);
     expect(resultField5).toBeInTheDocument();
   });
   it("paternaluncles/s when not found", () => {
@@ -448,7 +519,7 @@ describe("Problem 1 : find relation", () => {
       target: { value: "maternaluncles" },
     });
     fireEvent.click(button);
-    const resultField3 = screen.getByText(/Result: no such relation found/i);
+    const resultField3 = screen.getByText(/Result: Ish,Chit,Vyan/i);
     expect(resultField3).toBeInTheDocument();
 
     fireEvent.change(nameInputField, {
@@ -601,11 +672,6 @@ describe("Problem 3 : find most daughters", () => {
     let relationtoadd = screen.getByTestId("relationtoadd");
     let button = screen.getByTestId("addchild");
     let buttonMax = screen.getByTestId("checkMax");
-    fireEvent.click(buttonMax);
-    const resultField1 = screen.getByText(
-      /Result:Aga:1Jaya:1Lika:1Jinki:1Satya:1/i
-    );
-    expect(resultField1).toBeInTheDocument();
 
     fireEvent.change(parentname, {
       target: { value: "Aga" },
@@ -638,7 +704,7 @@ describe("Problem 3 : find most daughters", () => {
 });
 
 describe("Problem 4", () => {
-  it("check paternaluncles and maternaluncles", () => {
+  it("check paternaluncles", () => {
     render(<App />);
     let firstName = screen.getByTestId("firstname");
     let secondname = screen.getByTestId("secondname");
@@ -650,7 +716,9 @@ describe("Problem 4", () => {
       target: { value: "Vich" },
     });
     fireEvent.click(relationbutton);
-    const resultField1 = screen.getByText(/Result : maternaluncles/i);
+    const resultField1 = screen.getByText(
+      /Result : paternaluncles,maternaluncles/i
+    );
     expect(resultField1).toBeInTheDocument();
     fireEvent.change(firstName, {
       target: { value: "asva" },
@@ -659,7 +727,9 @@ describe("Problem 4", () => {
       target: { value: "Vich" },
     });
     fireEvent.click(relationbutton);
-    const resultField2 = screen.getByText(/Result : maternaluncles/i);
+    const resultField2 = screen.getByText(
+      /Result : paternaluncles,maternaluncles/i
+    );
     expect(resultField2).toBeInTheDocument();
     fireEvent.change(firstName, {
       target: { value: "Vila" },
@@ -668,7 +738,9 @@ describe("Problem 4", () => {
       target: { value: "Vyan" },
     });
     fireEvent.click(relationbutton);
-    const resultField3 = screen.getByText(/Result : paternaluncles/i);
+    const resultField3 = screen.getByText(
+      /Result : paternaluncles,maternaluncles/i
+    );
     expect(resultField3).toBeInTheDocument();
   });
 });

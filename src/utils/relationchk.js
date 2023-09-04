@@ -14,10 +14,13 @@ export const relations = [
   "paternalaunts",
   "maternalaunts",
 ];
+
+// using DF to traverse through the tree and get immediate
+// family members of the name input
 export function findFamilyForName(name, family) {
   let familyR;
   function traverse(name, family) {
-    if (name === "Shan" || name === "Aga") {
+    if (name === familyObject.mother || name === familyObject.father) {
       familyR = { ...family };
     } else {
       family.children.forEach((d) => {
@@ -33,8 +36,9 @@ export function findFamilyForName(name, family) {
   return familyR;
 }
 
+// using DF to traverse through the tree to add at a particular position
 export function addFamilyForName(family, name, newS) {
-  if (name === "Shan" || name === "Aga") {
+  if (name === familyObject.father || name === familyObject.mother) {
     family.children = [...newS];
   } else {
     family.children.forEach((d) => {
@@ -47,12 +51,15 @@ export function addFamilyForName(family, name, newS) {
 
   return family;
 }
+
+// to find the family of given name, not including parents
 function findSubFamily(name, family) {
   let subFamily = family.children.filter(
     (d) => name === d.father || name === d.mother
   );
   return subFamily;
 }
+
 export function findBrother(name, family) {
   if (name === familyObject.mother || name === familyObject.father) {
     return [];
@@ -104,6 +111,7 @@ export function findSister(name, family) {
     }
   }
 }
+
 export function findFather(name, family) {
   if (name === familyObject.father || name === familyObject.mother) {
     return [];
@@ -140,31 +148,6 @@ export function findMother(name, family) {
 }
 
 export function findChildren(name, family) {
-  // if (family.mother === name || family.father === name) {
-  //   if (family.children.length > 0) {
-  //     // console.log("achildren:", family.children);
-  //     return family.children;
-  //   } else {
-  //     // console.log("a no children");
-  //     return [];
-  //   }
-  // } else {
-  //   let respectiveFamily = family.children.filter(
-  //     (d) => d.father === name || d.mother === name
-  //   );
-  //   console.log(
-  //     "akansha family!!!!: ",
-  //     respectiveFamily,
-  //     family.children,
-  //     name
-  //   );
-  //   if (respectiveFamily[0].children.length !== 0) {
-  //     return respectiveFamily.children;
-  //   } else {
-  //     return [];
-  //   }
-
-  // }
   let list = [];
   if (name === familyObject.father || name === familyObject.mother) {
     if (family.children.length !== 0) {
@@ -181,7 +164,6 @@ export function findChildren(name, family) {
     }
   } else {
     let fam = findSubFamily(name, family)[0];
-    // console.log(fam, name, family);
     if (fam.children.length !== 0) {
       list = fam.children.map((d) => {
         if (d.relation === "son") {
@@ -196,6 +178,7 @@ export function findChildren(name, family) {
     }
   }
 }
+
 export function findSons(name, family) {
   if (name === familyObject.mother || name === familyObject.father) {
     if (family.children.length > 0) {
@@ -218,6 +201,7 @@ export function findSons(name, family) {
     }
   }
 }
+
 export function findDaughters(name, family) {
   if (name === familyObject.mother || name === familyObject.father) {
     if (family.children.length > 0) {
@@ -249,18 +233,38 @@ export function findDaughters(name, family) {
     }
   }
 }
+
 export function findGrandDaughters(name, family) {
-  if (family.children.length > 0) {
-    let grandChildren = family.children.filter((d) => d.children.length > 0);
-    let granddaughters;
-    grandChildren.forEach((d) => {
-      granddaughters.push(findDaughters(name, d));
-    });
-    return granddaughters;
+  if (familyObject.mother === name || familyObject.father === name) {
+    if (family.children.length > 0) {
+      let grandChildren = family.children.filter((d) => d.children.length > 0);
+      let granddaughters = [];
+      grandChildren.forEach((d) => {
+        granddaughters.push(
+          findDaughters(d.father || d.mother, d, d).join(",")
+        );
+      });
+      return granddaughters.filter((d) => d !== "").join(",");
+    } else {
+      return [];
+    }
   } else {
-    return [];
+    let subFamily = findSubFamily(name, family)[0];
+    if (subFamily.children.length > 0) {
+      let grandChildren = subFamily.children.filter(
+        (d) => d.children.length > 0
+      );
+      let granddaughters = [];
+      grandChildren.forEach((d) => {
+        granddaughters.push(findDaughters(d.father || d.mother, d).join(","));
+      });
+      return granddaughters.filter((d) => d !== "").join(",");
+    } else {
+      return [];
+    }
   }
 }
+
 export function findSisterInLaw(name, family) {
   if (family.children.length === 1) {
     return [];
@@ -268,10 +272,19 @@ export function findSisterInLaw(name, family) {
     let subFamily = findSubFamily(name, family)[0];
     let sisterinlaw = [];
 
-    if (subFamily?.mother === name && subFamily?.relation === "son") {
-      let sister = findSister(subFamily?.father, family);
+    if (
+      (subFamily?.mother === name && subFamily?.relation === "son") ||
+      (subFamily?.father === name && subFamily?.relation === "daughter")
+    ) {
+      let sister =
+        subFamily?.mother === name
+          ? findSister(subFamily?.father, family)
+          : findSister(subFamily?.mother, family);
       sister.forEach((d) => sisterinlaw.push(d.mother));
-      let brother = findBrother(name, family);
+      let brother =
+        subFamily?.mother === name
+          ? findBrother(subFamily?.father, family)
+          : findBrother(subFamily?.mother, family);
       brother.forEach((d) => sisterinlaw.push(d.mother));
     } else if (
       (subFamily?.father === name && subFamily?.relation === "son") ||
@@ -286,24 +299,31 @@ export function findSisterInLaw(name, family) {
     return sisterinlaw;
   }
 }
+
 export function findBrotherInLaw(name, family) {
-  // console.log("akash : ", name, family);
   if (family.children.length === 1) {
     return [];
   } else {
     let subFamily = findSubFamily(name, family)[0];
-
     let brotherinlaw = [];
-    if (subFamily?.mother === name && subFamily?.relation === "son") {
-      let brothers = findBrother(subFamily?.father, family);
-      brothers.forEach((d) => brotherinlaw.push(d.father));
-    } else if (
-      subFamily?.father === name &&
-      subFamily?.relation === "daughter"
+    if (
+      (subFamily?.mother === name && subFamily?.relation === "son") ||
+      (subFamily?.father === name && subFamily?.relation === "daughter")
     ) {
-      let brothers = findBrother(subFamily?.mother, family);
+      let brothers =
+        subFamily?.mother === name
+          ? findBrother(subFamily?.father, family)
+          : findBrother(subFamily?.mother, family);
       brothers.forEach((d) => brotherinlaw.push(d.father));
-    } else if (subFamily?.father === name && subFamily?.relation === "son") {
+      let sister =
+        subFamily?.mother === name
+          ? findSister(subFamily?.father, family)
+          : findSister(subFamily?.mother, family);
+      sister.forEach((d) => brotherinlaw.push(d.father));
+    } else if (
+      (subFamily?.mother === name && subFamily?.relation === "daughter") ||
+      (subFamily?.father === name && subFamily?.relation === "son")
+    ) {
       let sister = findSister(name, family);
       sister.forEach((d) => brotherinlaw.push(d.father));
     } else {
@@ -316,47 +336,100 @@ export function findBrotherInLaw(name, family) {
 
 export function findPaternalUncle(family) {
   let father = family.father;
-  if (family.relation === "son") {
-    let fatherFamily = findFamilyForName(father, familyObject);
-    let paternalUncle1 = findBrother(father, fatherFamily).map((d) => d.father);
-    let paternalUncle2 = findBrotherInLaw(father, fatherFamily);
-    return [...paternalUncle1, ...paternalUncle2];
-  } else {
-    return [];
-  }
+  // if (family.relation === "son") {
+  let fatherFamily = findFamilyForName(father, familyObject);
+  let paternalUncle1 = findBrother(father, fatherFamily).map((d) => d.father);
+  let paternalUncle2 = findBrotherInLaw(father, fatherFamily);
+  return [...paternalUncle1, ...paternalUncle2];
+  // } else {
+  //   return [];
+  // }
 }
+
 export function findMaternalUncle(family) {
   let mother = family.mother;
-  if (family.relation === "daughter") {
-    let motherFamily = findFamilyForName(mother, familyObject);
-    let maternalUncle1 = findBrother(mother, motherFamily).map((d) => d.father);
-    // console.log("aanak: ", maternalUncle1);
-    let maternalUncle2 = findBrotherInLaw(mother, motherFamily);
-    return [...maternalUncle1, ...maternalUncle2];
-  } else {
-    return [];
-  }
+  // if (family.relation === "daughter") {
+  let motherFamily = findFamilyForName(mother, familyObject);
+  let maternalUncle1 = findBrother(mother, motherFamily).map((d) => d.father);
+  let maternalUncle2 = findBrotherInLaw(mother, motherFamily);
+  return [...maternalUncle1, ...maternalUncle2];
+  // } else {
+  //   return [];
+  // }
 }
 
 export function findPaternalSister(family) {
   let father = family.father;
-  if (family.relation === "son") {
-    let fatherFamily = findFamilyForName(father, familyObject);
-    let paternalAunt1 = findSister(father, fatherFamily).map((d) => d.mother);
-    let paternalAunt2 = findSisterInLaw(father, fatherFamily);
-    return [...paternalAunt1, ...paternalAunt2];
-  } else {
-    return [];
-  }
+  // if (family.relation === "son") {
+  let fatherFamily = findFamilyForName(father, familyObject);
+  let paternalAunt1 = findSister(father, fatherFamily).map((d) => d.mother);
+  let paternalAunt2 = findSisterInLaw(father, fatherFamily);
+  return [...paternalAunt1, ...paternalAunt2];
+  // } else {
+  //   return [];
+  // }
 }
+
 export function findMaternalSister(family) {
   let mother = family.mother;
-  if (family.relation === "daughter") {
-    let motherFamily = findFamilyForName(mother, familyObject);
-    let maternalAunt1 = findSister(mother, motherFamily).map((d) => d.mother);
-    let maternalAunt2 = findSisterInLaw(mother, motherFamily);
-    return [...maternalAunt1, ...maternalAunt2];
-  } else {
-    return [];
-  }
+  // if (family.relation === "daughter") {
+  let motherFamily = findFamilyForName(mother, familyObject);
+  let maternalAunt1 = findSister(mother, motherFamily).map((d) => d.mother);
+  let maternalAunt2 = findSisterInLaw(mother, motherFamily);
+  return [...maternalAunt1, ...maternalAunt2];
+  // } else {
+  //   return [];
+  // }
+}
+
+export function findCousins(name, family) {
+  let brothers =
+    family.relation === "daughter"
+      ? findBrother(
+          family.mother,
+          findFamilyForName(family.mother, familyObject)
+        )
+      : findBrother(
+          family.father,
+          findFamilyForName(family.mother, familyObject)
+        );
+  let sister =
+    family.relation === "daughter"
+      ? findSister(
+          family.mother,
+          findFamilyForName(family.mother, familyObject)
+        )
+      : findSister(
+          family.father,
+          findFamilyForName(family.mother, familyObject)
+        );
+  let cousins = [];
+  brothers.forEach((d) => {
+    cousins.push(
+      d.children
+        ?.map((x) => {
+          if (x.relation === "daughter") {
+            return x.mother;
+          } else {
+            return x.father;
+          }
+        })
+        .join(",")
+    );
+  });
+  sister.forEach((d) => {
+    cousins.push(
+      d.children
+        ?.map((x) => {
+          if (x.relation === "daughter") {
+            return x.mother;
+          } else {
+            return x.father;
+          }
+        })
+        .join(",")
+    );
+  });
+
+  return cousins;
 }

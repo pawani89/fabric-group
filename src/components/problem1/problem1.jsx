@@ -38,12 +38,14 @@ function Problem1({
         <option value="children">children</option>
         <option value="sons">sons</option>
         <option value="daughters">daughters</option>
+        <option value="granddaughters">granddaughters</option>
         <option value="sisterinlaw">sisterinlaw</option>
         <option value="brotherinlaw">brotherinlaw</option>
         <option value="paternaluncles">paternaluncles</option>
         <option value="maternaluncles">maternaluncles</option>
         <option value="paternalaunts">paternalaunts</option>
         <option value="maternalaunts">maternalaunts</option>
+        <option value="cousins">cousins</option>
       </select>
       <button onClick={findFamily} data-testid="findfamily">
         Find Family
